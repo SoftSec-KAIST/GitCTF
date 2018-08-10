@@ -1,0 +1,72 @@
+{
+    "player":"Your ID",
+    "player_team":"Your Team",
+    "score_board":"Scoreboard URL",
+    "repo_owner": "KAIST-IS521",
+    "intended_pts": 10,
+    "unintended_pts": 100,
+    "round_frequency": 600,
+    "start_time": "2018-05-28T09:00:00+09:00",
+    "end_time": "2018-05-22T00:00:00+09:00",
+    "exploit_timeout": {
+      "injection_phase":10,
+      "exercise_phase":60
+    },
+    "teams": {
+        "team1":{
+            "repo_name": "2018s-gitctf-team1",
+            "pub_key_id": "",
+            "bug1": "Hash",
+            "bug2": "Hash",
+            "bug3": "Hash",
+            "bug4": "Hash"
+        },
+        "team2":{
+            "repo_name": "2018s-gitctf-team2",
+            "pub_key_id": "",
+            "bug1": "Hash",
+            "bug2": "Hash",
+            "bug3": "Hash",
+            "bug4": "Hash"
+        },
+        "team3":{
+            "repo_name": "2018s-gitctf-team3",
+            "pub_key_id": "",
+            "bug1": "Hash",
+            "bug2": "Hash",
+            "bug3": "Hash",
+            "bug4": "Hash"
+        },
+        "team4":{
+            "repo_name": "2018s-gitctf-team4",
+            "pub_key_id": "",
+            "bug1": "Hash",
+            "bug2": "Hash",
+            "bug3": "Hash",
+            "bug4": "Hash"
+        },
+        "team5":{
+            "repo_name": "2018s-gitctf-team5",
+            "pub_key_id": "",
+            "bug1": "Hash",
+            "bug2": "Hash",
+            "bug3": "Hash",
+            "bug4": "Hash"
+        },
+        "instructor":{
+            "repo_name": "-",
+            "pub_key_id": "48EA8545"
+        }
+    },
+    "individual": {
+        "GitHub ID of a participant":{
+            "pub_key_id": "XXXXXXXX",
+            "team": "team1"
+        },
+        "GitHub ID of a participant":{
+            "pub_key_id": "YYYYYYYY",
+            "team": "team2"
+        }
+    }
+}
+
