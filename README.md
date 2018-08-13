@@ -1,7 +1,7 @@
 # Git-based CTF
 
 Git-based CTF is a novel attack-and-defense CTF platform that can be easily
-hosted as an in-course activity proposed in our [paper]() at USENIX ASE. This
+hosted as an in-course activity proposed in our [paper](https://www.usenix.org/system/files/conference/ase18/ase18-paper_wi.pdf) at USENIX ASE. This
 repository contains [scripts](scripts) for automating ```Git-based CTF```. To
 see how to configure and play Git-based CTF, see the followings.
 
