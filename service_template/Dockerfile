@@ -24,6 +24,7 @@ FROM debian:latest
 
 # ======================================
 # Install your package here
+RUN sed -i 's/deb.debian.org/ftp.daumkakao.com/g' /etc/apt/sources.list
 # ======================================
 
 RUN mkdir -p /var/ctf
