@@ -33,6 +33,7 @@ from verify_injection import verify_injection
 from show_score import show_score
 from evaluate import evaluate
 from get_hash import get_hash
+from setup_env import setup_env
 
 def add_exploit(parser):
     parser.add_argument("--exploit", metavar="DIR", required=True,
@@ -69,6 +70,10 @@ def add_service_port(parser):
 def add_conf(parser):
     parser.add_argument("--conf", metavar="FILE", default="config.json",
                         help="specify the config file (default: config.json)")
+
+def add_admin_conf(parser):
+    parser.add_argument("--admin-conf", metavar="FILE", default=".config.json",
+            help="specify the administrative config file (default: .config.json)")
 
 def add_token(parser, required):
     parser.add_argument("--token", metavar="APITOKEN", required=required,
@@ -169,6 +174,13 @@ def hash_main(prog, options):
     args = parser.parse_args(options)
     get_hash(args.conf, args.token)
 
+def setup_main(prog, options):
+    desc = 'setup CTF environment'
+    parser = argparse.ArgumentParser(description=desc, prog=prog)
+    add_admin_conf(parser)
+    add_token(parser, False)
+    args = parser.parse_args(options)
+    setup_env(args.admin_conf, args.token)
 
 def eval_main(prog, options):
     desc = 'evaluate participants'
@@ -231,8 +243,9 @@ def print_usage():
     print '    submit    : submit an exploit'
     print '    fetch     : fetch an exploit'
     print '    score     : show the score'
-    print '    hash      : get hash of each branch'
+    print '    hash      : get hash of each branch (for administrative purpose)'
     print '    eval      : manage the game score (for administrative purpose)'
+    print '    setup     : setup the CTF env. (for administrative purpose)'
     sys.exit()
 
 def main(action, options):
@@ -252,6 +265,8 @@ def main(action, options):
         hash_main(sys.argv[0] + ' hash', options)
     elif action == 'eval':
         eval_main(sys.argv[0] + ' eval', options)
+    elif action == 'setup':
+        setup_main(sys.argv[0] + ' setup', options)
     else:
         print 'Unknown action.'
 
