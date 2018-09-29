@@ -56,6 +56,7 @@ def result(r, expected_code):
     if r.status_code == expected_code:
         return json.loads(r.content)
     else:
+        print '[*] response content', r.content
         return None
 
 class Github():
