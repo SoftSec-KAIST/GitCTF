@@ -1,0 +1,11 @@
+{
+    "instructor": "seongil-wi",
+    "repo_owner": "Demo-Binary-GitCTF",
+    "scoreboard_name": "scoreboard",
+    "problems": {
+        "problem1": {
+            "repo_name": "team1",
+            "description": "problem name"
+        }
+    }
+}
