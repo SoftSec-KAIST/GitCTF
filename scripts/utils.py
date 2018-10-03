@@ -63,6 +63,9 @@ def get_dirname(path):
     else:
         return path[idx + 1:]
 
+def copy(src_path, dst_path):
+    try: shutil.copy2(src_path, dst_path)
+    except: pass
 
 # Same as `rm -rf`
 def rmdir(dir):

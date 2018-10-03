@@ -2,10 +2,21 @@
     "instructor": "seongil-wi",
     "repo_owner": "Demo-Binary-GitCTF",
     "scoreboard_name": "scoreboard",
+    "repos": [
+        "team1_repo_name"
+    ],
     "problems": {
         "problem1": {
+            "base_image": "i386/debian:latest",
+            "service_exe_type": "xinetd",
             "repo_name": "team1",
-            "description": "problem name"
+            "description": "description",
+            "bin_src_path": "example/vuln",
+            "bin_dst_path": "/service/vuln",
+            "flag_dst_path": "/var/ctf/flag",
+            "bin_args": "",
+            "port": "1000",
+            "required_packages": "xinetd sudo"
         }
     }
 }
