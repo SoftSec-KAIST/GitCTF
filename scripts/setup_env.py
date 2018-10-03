@@ -88,6 +88,7 @@ def create_xinetd_config(problem_info, repo_dir_path, bin_name):
 
     s = Template(service_conf)
     service_conf = s.substitute(service_conf_name = service_conf_name, \
+                                bin_name = bin_name,  \
                                 bin_dst_path = bin_dst_path, \
                                 bin_args = bin_args, \
                                 port = port)

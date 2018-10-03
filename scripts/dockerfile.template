@@ -30,11 +30,16 @@ RUN apt-get upgrade
 RUN apt-get install -y $required_packages
 # ======================================
 
+RUN adduser $bin_name
+
 COPY flag $flag_dst_path
+COPY $bin_name $bin_dst_path
+
+RUN chown root:$bin_name $flag_dst_path $bin_dst_path
+RUN chmod 0550 $bin_dst_path
+RUN chmod 0440 $flag_dst_path
 
 # ======================================
 # Execute service
-COPY $bin_name $bin_dst_path
-
 $exec_command
 # ======================================
