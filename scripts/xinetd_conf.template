@@ -1,0 +1,11 @@
+service $service_conf_name
+{
+    flags = REUSE
+    socket_type = stream
+    wait = no
+    user = $bin_name
+    server = $bin_dst_path
+    server_args = $bin_args
+    disable = no
+    port = $port
+}

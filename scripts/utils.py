@@ -63,6 +63,9 @@ def get_dirname(path):
     else:
         return path[idx + 1:]
 
+def copy(src_path, dst_path):
+    try: shutil.copy2(src_path, dst_path)
+    except: pass
 
 # Same as `rm -rf`
 def rmdir(dir):
@@ -116,7 +119,7 @@ def prompt_warning(msg):
 def prompt_rmdir_warning(dir):
     if os.path.isdir(dir):
         warning_msg = "Directory %s already exists. " % dir
-        warning_msg += "We will remove this directory and clone a fresh repo."
+        warning_msg += "We will remove this directory and create new directory."
         prompt_warning(warning_msg)
 
 def prompt_checkout_warning(dir):

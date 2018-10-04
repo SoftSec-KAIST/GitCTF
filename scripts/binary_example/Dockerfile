@@ -20,18 +20,26 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-FROM i386/debian:latest
-
+FROM i386/debian
 # ======================================
 # Install your package here
 RUN sed -i 's/deb.debian.org/ftp.daumkakao.com/g' /etc/apt/sources.list
+RUN sed -i 's/archive.ubuntu.com/ftp.daumkakao.com/g' /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get upgrade
+RUN apt-get install -y xinetd
 # ======================================
 
-# ======================================
-# Build your exploit here
-# ======================================
+COPY flag /var/ctf/flag
 
 # ======================================
-# Copy your "exploit" to /bin/exploit
+# Build and run your service here
+COPY vuln /service/vuln
+
+COPY service_conf /etc/xinetd.d/
+
+RUN echo "service_conf 4000/tcp" >> /etc/services
+
+RUN service xinetd restart
+ENTRYPOINT ["xinetd", "-dontfork"]
 # ======================================

@@ -69,7 +69,6 @@ def make_github_issue(repo_owner, repo_name, title, body, github):
     r = github.post(query, json.dumps(issue), 201)
     if r is None:
         print '[*] Could not create issue "%s"' % title
-        # TODO : Get the correct error message
         print '[*] Response:', r
         sys.exit(-1)
     else:
@@ -81,7 +80,6 @@ def get_github_issue(repo_owner, repo_name, issue_no, github):
     r = github.get(query)
     if r is None:
         print 'Could not get Issue from %s' % query
-        # TODO : Get the correct error message
         print 'Response:', r
         sys.exit(-1)
     else:
@@ -118,7 +116,6 @@ def is_closed(repo_owner, repo_name, issue_no, github):
     r = github.get(query)
     if r is None:
         print 'Could not get Issue from %s' % query
-        # TODO : Get the correct error message
         print 'Response:', r
         return True     # Not deal with the error case. Just regard as closed
     else:
@@ -135,6 +132,7 @@ def create_comment(repo_owner, repo_name, issue_no, comment, github):
     r = github.post(query, json.dumps(issue), 201)
     if r is None:
         print '[*] Could not create comment in "%s/%s"' % (repo_name, issue_no)
+        print r
     else:
         print '[*] Successfully created comment'
 

@@ -20,18 +20,26 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-
-FROM i386/debian:latest
-
+FROM $base_image
 # ======================================
 # Install your package here
 RUN sed -i 's/deb.debian.org/ftp.daumkakao.com/g' /etc/apt/sources.list
+RUN sed -i 's/archive.ubuntu.com/ftp.daumkakao.com/g' /etc/apt/sources.list
+RUN apt-get update
+RUN apt-get upgrade
+RUN apt-get install -y $required_packages
 # ======================================
 
-# ======================================
-# Build your exploit here
-# ======================================
+RUN adduser $bin_name
+
+COPY flag $flag_dst_path
+COPY $bin_name $bin_dst_path
+
+RUN chown root:$bin_name $flag_dst_path $bin_dst_path
+RUN chmod 0550 $bin_dst_path
+RUN chmod 0440 $flag_dst_path
 
 # ======================================
-# Copy your "exploit" to /bin/exploit
+# Execute service
+$exec_command
 # ======================================
