@@ -21,6 +21,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+import os
 import sys
 import csv
 import json
@@ -97,7 +98,9 @@ def display_score(data, freq, unintended_pts, end_time, pin_time = None):
         return score
 
 def make_html(log, config):
-    with open('score.template', 'r') as f:
+    mydir = os.path.dirname(os.path.abspath(__file__))
+    tmplfile = os.path.join(mydir, 'score.template')
+    with open(tmplfile, 'r') as f:
         html = f.read()
 
     col_var = ''
