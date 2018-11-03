@@ -31,5 +31,4 @@ HOSTPORT=$3
 
 docker build -t $SERVICE_NAME .
 
-docker run -d --name $SERVICE_NAME \
-    --net=host $SERVICE_NAME
+docker run --rm -d --name $SERVICE_NAME --net=host $SERVICE_NAME
