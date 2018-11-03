@@ -24,7 +24,6 @@
 import sys
 import json
 import os
-import re
 from utils import load_config, rmfile, mkdir, random_string, rmdir
 from utils import prompt_checkout_warning, print_and_log
 from git import list_branches, clone, checkout
