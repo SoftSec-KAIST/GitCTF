@@ -26,21 +26,18 @@ import sys
 from utils import iso8601_to_timestamp
 from datetime import datetime, timedelta
 
-def create_bug_label(github, query, label_name, color, desc):
-    issue = {'name': label_name, 'descryption': desc, 'color': color}
+def create_label(repo_owner, repo_name, label_name, \
+        color, desc, github):
+
+    query = '/repos/%s/%s/labels' % (repo_owner, repo_name)
+    issue = {'name': label_name, 'description': desc, 'color': color}
     # Add the label to the repository
     if github.post(query, json.dumps(issue)) is None:
         print('[*] Label already exists in %s' % label_name)
 
-def create_bug_labels(repo_owner, repo_name, github):
-    '''Create an label on github.com'''
-    query = '/repos/%s/%s/labels' % (repo_owner, repo_name)
-    create_bug_label(github, query, 'eval', '9466CB',
-                     'Exploit is under review.')
-
-def update_bug_label(repo_owner, repo_name, issue_no, title, github):
+def update_label(repo_owner, repo_name, issue_no, github, label):
     query = '/repos/%s/%s/issues/%s' % (repo_owner, repo_name, issue_no)
-    labels = ['evaluation']
+    labels = [label]
     issue = {'labels': labels}
     r = github.patch(query, json.dumps(issue))
     if r is None:

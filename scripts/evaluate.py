@@ -29,7 +29,7 @@ import json
 import time
 import calendar
 from issue import is_closed, create_comment, close_issue
-from issue import create_bug_labels, update_bug_label, get_github_issue
+from issue import create_label, update_label, get_github_issue
 from cmd import run_command
 from utils import load_config, rmdir, rmfile, iso8601_to_timestamp, is_timeover
 from github import Github, get_github_path
@@ -224,9 +224,12 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
         mark_as_read(id, github)
         return
 
-    create_bug_labels(repo_owner, repo_name, github)
+
     title, _, _, _ = get_github_issue(repo_owner, repo_name, num, github)
-    update_bug_label(repo_owner, repo_name, num, title, github)
+
+    create_label(repo_owner, repo_name, "eval", "9466CB", \
+            "Exploit is under review.", github)
+    update_label(repo_owner, repo_name, num, github, "eval")
 
     defender = get_defender(config, repo_name)
     if defender is None:
@@ -247,6 +250,10 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
                 '[*] Self-attack is not allowed: %s.' % attacker, \
                 id, github)
         return
+
+    create_label(repo_owner, repo_name, branch, "DA0019", \
+            "Exploit for %s" % branch , github)
+    update_label(repo_owner, repo_name, num, github, branch)
 
     if branch == "master":
         kind = commit
