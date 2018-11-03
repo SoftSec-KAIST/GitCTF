@@ -30,18 +30,14 @@ from issue import submit_issue
 from utils import rmfile, load_config, prompt_checkout_warning
 from github import Github
 
-def submit(exploit_dir, service_dir, target, config_file, token=None):
+def submit(exploit_dir, service_dir, branch, target, config_file, token=None):
     config = load_config(config_file)
     timeout = config["exploit_timeout"]["exercise_phase"]
     prompt_checkout_warning(service_dir)
-    branches = list_branches(service_dir)
-
     verified_branch = None
-    for branch in branches:
-        result, _ = verify_exploit(exploit_dir, service_dir, branch, timeout, config)
-        if result:
-            verified_branch = branch
-            break
+    result, _ = verify_exploit(exploit_dir, service_dir, branch, timeout, config)
+    if result:
+        verified_branch = branch
 
     if verified_branch is None :
         print("[*] Your exploit did not work against any of the branch")
@@ -68,11 +64,12 @@ def submit(exploit_dir, service_dir, target, config_file, token=None):
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
-        print("Usage: %s [exploit dir] [service dir] [target team] [config]" %
+        print("Usage: %s [exploit dir] [service dir] [branch] [team] [config]" %
               sys.argv[0])
         sys.exit()
     exploit_dir = sys.argv[1]
     service_dir = sys.argv[2]
-    target = sys.argv[3]
-    config = sys.argv[4]
-    submit(exploit_dir, service_dir, target, config)
+    branch = sys.argv[3]
+    target = sys.argv[4]
+    config = sys.argv[5]
+    submit(exploit_dir, service_dir, branch, target, config)

@@ -126,8 +126,10 @@ def submit_main(prog, options):
     add_target(parser)
     add_token(parser, False)
     add_conf(parser)
+    add_branch(parser)
     args = parser.parse_args(options)
-    submit(args.exploit, args.service_dir, args.target, args.conf, args.token)
+    submit(args.exploit, args.service_dir, args.branch, args.target, args.conf,
+           args.token)
 
 def fetch_main(prog, options):
     desc = 'fetch an exploit'
