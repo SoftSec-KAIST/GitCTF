@@ -52,8 +52,9 @@ def checkout(dir, br):
         sys.exit()
 
 def get_latest_commit_hash(dir, create_time, branch='master'):
-    command = 'git -C %s rev-list --max-count=1 --before=%d %s' \
+    command = 'git -C %s rev-list --max-count=1 --before=%d origin/%s' \
                     % (dir, create_time, branch)
+    print(command)
     output, err, r = run_command(command, os.getcwd())
     if r != 0:
         print("[*] Failed to get the latest commit before %s" % create_time)

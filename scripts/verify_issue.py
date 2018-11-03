@@ -64,17 +64,8 @@ def verify_issue(defender, repo_name, issue_no, config, github, target_commit=No
         # Iterate through branches and collect candidates
         candidates = []
         for branch in branches:
-            if branch == 'master':
-                commit = get_latest_commit_hash(repo_name, create_time)
-                candidates.append((branch, commit))
-            else:
-                commit = config['teams'][team][branch]
-                candidates.append((branch, commit))
-    else:
-        # XXX It is reasonable to assume that target branch is master, since
-        # target_commit argument is provided only for processing an unintended
-        # vulnerability.
-        candidates = [("master", target_commit)]
+            commit = get_latest_commit_hash(repo_name, create_time, branch)
+            candidates.append((branch, commit))
 
     verified_branch = None
     verified_commit = None
