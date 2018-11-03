@@ -24,6 +24,7 @@
 import sys
 import json
 import os
+import re
 from utils import load_config, rmfile, mkdir, random_string, rmdir
 from utils import prompt_checkout_warning, print_and_log
 from git import list_branches, clone, checkout
@@ -40,6 +41,9 @@ def verify_issue(defender, repo_name, issue_no, config, github, target_commit=No
     repo_owner = config['repo_owner']
     title, submitter, create_time, content = \
         get_github_issue(repo_owner, repo_name, issue_no, github)
+
+    # Issue convention: "exploit-[branch_name]"
+    target_branch = title[8:]
 
     clone(repo_owner, repo_name)
 
@@ -60,17 +64,18 @@ def verify_issue(defender, repo_name, issue_no, config, github, target_commit=No
     # Now iterate through branches and verify exploit
     branches = list_branches(repo_name)
 
-    if target_commit is None:
+
+    if (target_branch in branches) and (target_commit is None):
         # Iterate through branches and collect candidates
         candidates = []
-        for branch in branches:
-            commit = get_latest_commit_hash(repo_name, create_time, branch)
-            candidates.append((branch, commit))
+        commit = get_latest_commit_hash(repo_name, create_time, target_branch)
+        candidates.append((target_branch, commit))
 
     verified_branch = None
     verified_commit = None
 
     log = 'About %s (exploit-service branch)\n' % title
+
     for (branch, commit) in candidates:
         if branch in title:
             result, log = verify_exploit(tmpdir, repo_name, commit, timeout, \
@@ -88,7 +93,8 @@ def verify_issue(defender, repo_name, issue_no, config, github, target_commit=No
     rmdir(repo_name)
 
     if verified_branch is None:
-        print("[*] The exploit did not work against any of the branch")
+        print("[*] The exploit did not work against branch '%s'" % \
+                target_branch)
     else:
         print("[*] The exploit has been verified against branch '%s'" %
               verified_branch)
