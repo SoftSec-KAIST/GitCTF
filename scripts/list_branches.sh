@@ -27,4 +27,4 @@ if [ "$#" -lt 1 ]; then
 fi
 GITDIR=$1
 git -C $GITDIR fetch --prune
-git -C $GITDIR for-each-ref refs/remotes | cut -d/ -f4 | grep -P '^bug\d+$'
+git -C $GITDIR for-each-ref refs/remotes | cut -d/ -f4 | grep -v master

@@ -29,7 +29,7 @@ from utils import base_dir, prompt_rmdir_warning, rmdir
 def list_branches(dir):
     external_path = os.path.join(base_dir(), "list_branches.sh")
     s, _, _ = run_command("%s \"%s\"" % (external_path, dir), os.getcwd())
-    branches = ["master"] + s.splitlines()
+    branches = s.splitlines()
     return branches
 
 def clone(repo_owner, repo_name, prompt=False, target_dir=None):
