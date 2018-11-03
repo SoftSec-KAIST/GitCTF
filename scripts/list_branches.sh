@@ -27,4 +27,6 @@ if [ "$#" -lt 1 ]; then
 fi
 GITDIR=$1
 git -C $GITDIR fetch --prune
-git -C $GITDIR for-each-ref refs/remotes | cut -d/ -f4 | grep -v master
+### Assume that problems are in branches other than master.
+git -C $GITDIR for-each-ref refs/remotes | cut -d/ -f4 \
+    | grep -v master | grep -v HEAD

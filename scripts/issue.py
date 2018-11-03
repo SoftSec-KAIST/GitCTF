@@ -35,19 +35,12 @@ def create_bug_label(github, query, label_name, color, desc):
 def create_bug_labels(repo_owner, repo_name, github):
     '''Create an label on github.com'''
     query = '/repos/%s/%s/labels' % (repo_owner, repo_name)
-    create_bug_label(github, query, 'intended', '9466CB',
-                     'Exploit that triggers intended vulnerability.')
-    create_bug_label(github, query, 'unintended', 'DA0019',
-                     'Exploit that triggers unintended vulnerability.')
+    create_bug_label(github, query, 'eval', '9466CB',
+                     'Exploit is under review.')
 
 def update_bug_label(repo_owner, repo_name, issue_no, title, github):
     query = '/repos/%s/%s/issues/%s' % (repo_owner, repo_name, issue_no)
-    labels = []
-    if 'master' in title:
-        labels.append('unintended')
-    else:
-        labels.append('intended')
-
+    labels = ['evaluation']
     issue = {'labels': labels}
     r = github.patch(query, json.dumps(issue))
     if r is None:
@@ -59,13 +52,7 @@ def update_bug_label(repo_owner, repo_name, issue_no, title, github):
 def make_github_issue(repo_owner, repo_name, title, body, github):
     '''Create an issue on github.com using the given parameters.'''
     query = '/repos/%s/%s/issues' % (repo_owner, repo_name)
-    labels = []
-    if 'master' in title:
-        labels.append('unintended')
-    else:
-        labels.append('intended')
-
-    issue = {'title': title, 'body': body, 'labels': labels}
+    issue = {'title': title, 'body': body}
     r = github.post(query, json.dumps(issue), 201)
     if r is None:
         print '[*] Could not create issue "%s"' % title
