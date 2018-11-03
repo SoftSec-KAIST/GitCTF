@@ -255,6 +255,7 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
             "Exploit for %s" % branch , github)
     update_label(repo_owner, repo_name, num, github, branch)
 
+    #XXX: We should fix this logic and scoreboard representation
     if branch == "master":
         kind = commit
     else:
