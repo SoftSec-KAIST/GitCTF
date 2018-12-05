@@ -114,8 +114,10 @@ def write_score(stamp, info, scoreboard_dir, pts):
     with open(os.path.join(scoreboard_dir, 'score.csv'), 'a') as f:
         attacker = info['attacker']
         defender = info['defender']
+        branch = info['branch']
         kind = info['bugkind']
-        f.write('%s,%s,%s,%s,%d\n' % (stamp, attacker, defender, kind, pts))
+        f.write('%s,%s,%s,%s,%s,%d\n' % (stamp, attacker, defender, branch, \
+                kind, pts))
 
 def write_message(info, scoreboard_dir, pts):
     with open(os.path.join(scoreboard_dir, msg_file), 'w') as f:
@@ -148,19 +150,20 @@ def commit_and_push(scoreboard_dir):
 
 def find_the_last_attack(scoreboard_dir, timestamp, info):
     last_commit = None
-    with open(os.path.join(scoreboard_dir, 'score.csv')) as f:
+    with open(os.path.join(scoreboard_dir, 'score.csv'), 'w+') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
-            if int(row[0]) >= timestamp and len(row[3]) == 40:
+            if int(row[0]) >= timestamp and len(row[4]) == 40:
                 if row[1] == info['attacker'] and row[2] == info['defender']:
-                    last_commit = row[3]
+                    if row[3] == info['branch']:
+                        last_commit = row[4]
     return last_commit
 
-def get_next_commit(last_commit, defender, config):
+def get_next_commit(last_commit, defender, branch, config):
     repo_name = config['teams'][defender]['repo_name']
     rmdir(repo_name)
     clone(config['repo_owner'], repo_name)
-    next_commit_hash = get_next_commit_hash(repo_name, 'master', last_commit)
+    next_commit_hash = get_next_commit_hash(repo_name, branch, last_commit)
     rmdir(repo_name)
     print next_commit_hash
     if next_commit_hash == '':
@@ -183,7 +186,7 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
     else:
         while True:
             target_commit = get_next_commit(target_commit, \
-                    info['defender'], config)
+                    info['defender'], info['branch'], config)
             if target_commit is None:
                 print '[*] No more commit to verify against'
                 break
@@ -257,7 +260,8 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
 
     #XXX: We should fix this logic and scoreboard representation
     kind = commit
-    info = {'attacker': attacker, 'defender': defender, 'bugkind': kind}
+    info = {'attacker': attacker, 'defender': defender,
+            'branch': branch, 'bugkind': kind}
     sync_scoreboard(scoreboard)
     process_unintended(repo_name, num, config, gen_time, info, scoreboard,
             id, github)
