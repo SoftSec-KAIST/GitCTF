@@ -49,15 +49,6 @@ def update_deferred(score, unint_attack_hist, freq, unintended_pts, end_time):
         pts = compute_unintended(start_time, end_time, freq, unintended_pts)
         compute_score(score, attacker, pts)
 
-def extra_for_intended(num_solver, defender, kind, pts):
-    prob_id = defender + "_" + kind
-    if prob_id in num_solver:
-        num_solver[prob_id] += 1
-        return pts
-    else:
-        num_solver[prob_id] = 1
-        return pts + 3 # XXX: make it configurable
-
 def display_score(data, freq, unintended_pts, end_time, pin_time = None):
     f = StringIO(data)
     reader = csv.reader(f, delimiter=',')
@@ -66,26 +57,24 @@ def display_score(data, freq, unintended_pts, end_time, pin_time = None):
     num_solver = {}
     unint_attack_hist = {}
     for row in reader:
-        attacker, defender, kind, points = row[1], row[2], row[3], int(row[4])
-        attack_id = attacker + "_" + defender
+        attacker, defender, branch, kind, points = row[1], row[2], row[3], \
+                row[4], int(row[5])
+        attack_id = attacker + "_" + defender + "_" + branch
         event_id = attack_id + "_" + kind
         t = float(row[0])
         if pin_time is not None and t >= float(pin_time):
             break
         if event_id in history: continue
         history.add(event_id)
-        if kind.startswith('bug'): # intended bugs
-            points = extra_for_intended(num_solver, defender, kind, points)
-            compute_score(score, attacker, points)
-        else: # unintended bugs
-            if attack_id in unint_attack_hist and points == 0:
-                if points != 0: continue
-                s = unint_attack_hist[attack_id]
-                pts = compute_unintended(s, t, freq, unintended_pts)
-                compute_score(score, attacker, pts)
-                unint_attack_hist.pop(attack_id, None)
-            else:
-                unint_attack_hist[attack_id] = t
+        # unintended bugs
+        if attack_id in unint_attack_hist and points == 0:
+            if points != 0: continue
+            s = unint_attack_hist[attack_id]
+            pts = compute_unintended(s, t, freq, unintended_pts)
+            compute_score(score, attacker, pts)
+            unint_attack_hist.pop(attack_id, None)
+        else:
+            unint_attack_hist[attack_id] = t
     # We now update all the deferred points for unintended attacks
     update_deferred(score, unint_attack_hist, freq, unintended_pts, end_time)
 
