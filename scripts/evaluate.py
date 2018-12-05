@@ -191,9 +191,6 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
         while True:
             target_commit = get_next_commit(target_commit, \
                     info['defender'], info['branch'], config)
-            print target_commit
-            print
-            print
             if target_commit is None:
                 print '[*] No more commit to verify against'
                 break
