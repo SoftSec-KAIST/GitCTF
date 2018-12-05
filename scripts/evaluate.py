@@ -101,14 +101,16 @@ def point_hash(attacker, defender, bugkind):
     return (attacker + '_' + defender + '_' + bugkind)
 
 def is_dup(scoreboard_dir, h): # XXX slow
-    with open(os.path.join(scoreboard_dir, 'score.csv'), 'w+') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            if len(row) == 0:
-                return False
-            if point_hash(row[1], row[2], row[3]) == h:
-                return True
-        return False
+    scoreboard_path = os.path.join(scoreboard_dir, 'score.csv')
+    if os.path.isfile(scoreboard_path):
+        with open() as f:
+            reader = csv.reader(f, delimiter=',')
+            for row in reader:
+                if len(row) == 0:
+                    return False
+                if point_hash(row[1], row[2], row[3]) == h:
+                    return True
+    return False
 
 def write_score(stamp, info, scoreboard_dir, pts):
     with open(os.path.join(scoreboard_dir, 'score.csv'), 'a') as f:
@@ -123,14 +125,13 @@ def write_message(info, scoreboard_dir, pts):
     with open(os.path.join(scoreboard_dir, msg_file), 'w') as f:
         attacker = info['attacker']
         defender = info['defender']
+        branch = info['branch']
         kind = info['bugkind']
         f.write('[Score] %s +%d\n\n' % (attacker, pts))
-        if kind.startswith('bug'):
-            f.write('%s attacked `%s` of %s' % (attacker, kind, defender))
-        elif pts == 0: # Protocol to indicate successfull defense
-            f.write('%s defended %s with %s' % (defender, attacker, kind))
+        if pts == 0: # Protocol to indicate successfull defense
+            f.write('%s defended `%s` %s with %s' % (defender, branch, attacker, kind))
         else:
-            f.write('%s attacked %s of %s' % (attacker, kind, defender))
+            f.write('%s attacked `%s` %s of %s' % (attacker, branch, kind, defender))
 
 def commit_and_push(scoreboard_dir):
     _, _, r = run_command('git add score.csv', scoreboard_dir)
@@ -150,13 +151,15 @@ def commit_and_push(scoreboard_dir):
 
 def find_the_last_attack(scoreboard_dir, timestamp, info):
     last_commit = None
-    with open(os.path.join(scoreboard_dir, 'score.csv'), 'w+') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            if int(row[0]) >= timestamp and len(row[4]) == 40:
-                if row[1] == info['attacker'] and row[2] == info['defender']:
-                    if row[3] == info['branch']:
-                        last_commit = row[4]
+    scoreboard_path = os.path.join(scoreboard_dir, 'score.csv')
+    if os.path.isfile(scoreboard_path):
+        with open(scoreboard_path) as f:
+            reader = csv.reader(f, delimiter=',')
+            for row in reader:
+                if int(row[0]) >= timestamp and len(row[4]) == 40:
+                    if row[1] == info['attacker'] and row[2] == info['defender']:
+                        if row[3] == info['branch']:
+                            last_commit = row[4]
     return last_commit
 
 def get_next_commit(last_commit, defender, branch, config):
@@ -178,6 +181,7 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
                         github):
     unintended_pts = config['unintended_pts']
     target_commit = find_the_last_attack(scoreboard, gen_time, info)
+
     if target_commit is None:
         # This exploit is previously unseen, give point.
         write_score(gen_time, info, scoreboard, unintended_pts)
@@ -187,6 +191,9 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
         while True:
             target_commit = get_next_commit(target_commit, \
                     info['defender'], info['branch'], config)
+            print target_commit
+            print
+            print
             if target_commit is None:
                 print '[*] No more commit to verify against'
                 break
