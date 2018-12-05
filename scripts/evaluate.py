@@ -227,7 +227,7 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
 
     title, _, _, _ = get_github_issue(repo_owner, repo_name, num, github)
 
-    create_label(repo_owner, repo_name, "eval", "9466CB", \
+    create_label(repo_owner, repo_name, "eval", "DA0019", \
             "Exploit is under review.", github)
     update_label(repo_owner, repo_name, num, github, "eval")
 
@@ -251,9 +251,9 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
                 id, github)
         return
 
-    create_label(repo_owner, repo_name, branch, "DA0019", \
+    create_label(repo_owner, repo_name, "verified", "9466CB", \
             "Exploit for %s" % branch , github)
-    update_label(repo_owner, repo_name, num, github, branch)
+    update_label(repo_owner, repo_name, num, github, "verified")
 
     #XXX: We should fix this logic and scoreboard representation
     if branch == "master":
