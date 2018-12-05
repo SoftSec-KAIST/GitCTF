@@ -43,7 +43,7 @@ def update_label(repo_owner, repo_name, issue_no, github, label):
     if r is None:
         print '[*] Could not create comment in "%s/%s"' % (repo_name, issue_no)
     else:
-        print '[*] Successfully created comment'
+        print '[*] Successfully updated label'
 
 
 def make_github_issue(repo_owner, repo_name, title, body, github):
