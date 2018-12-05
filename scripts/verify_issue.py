@@ -63,10 +63,9 @@ def verify_issue(defender, repo_name, issue_no, config, github, target_commit=No
     # Now iterate through branches and verify exploit
     branches = list_branches(repo_name)
 
-
+    candidates = []
     if (target_branch in branches) and (target_commit is None):
         # Iterate through branches and collect candidates
-        candidates = []
         commit = get_latest_commit_hash(repo_name, create_time, target_branch)
         candidates.append((target_branch, commit))
 
