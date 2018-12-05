@@ -9,8 +9,8 @@
     "start_time": "2018-05-28T09:00:00+09:00",
     "end_time": "2018-05-22T00:00:00+09:00",
     "exploit_timeout": {
-      "injection_phase":10,
-      "exercise_phase":60
+        "injection_phase":10,
+        "exercise_phase":60
     },
     "teams": {
         "team1":{
