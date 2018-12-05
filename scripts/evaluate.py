@@ -39,7 +39,9 @@ from verify_issue import verify_issue
 msg_file = 'msg' # Temporarily store commit message
 
 def failure_action(repo_owner, repo_name, issue_no, comment, id, github):
-    print comment
+    create_label(repo_owner, repo_name, "failed", "000000", \
+            "Verification failed.", github)
+    update_label(repo_owner, repo_name, issue_no, github, "failed")
     create_comment(repo_owner, repo_name, issue_no, comment, github)
     close_issue(repo_owner, repo_name, issue_no, github)
     mark_as_read(id, github)
@@ -96,21 +98,6 @@ def get_defender(config, target_repo):
 def sync_scoreboard(scoreboard_dir):
     run_command('git reset --hard', scoreboard_dir)
     run_command('git pull', scoreboard_dir)
-
-def point_hash(attacker, defender, bugkind):
-    return (attacker + '_' + defender + '_' + bugkind)
-
-def is_dup(scoreboard_dir, h): # XXX slow
-    scoreboard_path = os.path.join(scoreboard_dir, 'score.csv')
-    if os.path.isfile(scoreboard_path):
-        with open() as f:
-            reader = csv.reader(f, delimiter=',')
-            for row in reader:
-                if len(row) == 0:
-                    return False
-                if point_hash(row[1], row[2], row[3]) == h:
-                    return True
-    return False
 
 def write_score(stamp, info, scoreboard_dir, pts):
     with open(os.path.join(scoreboard_dir, 'score.csv'), 'a') as f:
@@ -178,7 +165,7 @@ def get_next_commit(last_commit, defender, branch, config):
 # internally. We may consider replacing this by calling fetch() once and then
 # calling verify_exploit() multiple times.
 def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
-                        github):
+                        github, repo_owner):
     unintended_pts = config['unintended_pts']
     target_commit = find_the_last_attack(scoreboard, gen_time, info)
 
@@ -206,24 +193,15 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
                 write_message(info, scoreboard, 0)
                 commit_and_push(scoreboard)
                 mark_as_read(id, github)
+                create_label(repo_owner, repo_name, "defended", "0000ff", \
+                        "Defended.", github)
+                update_label(repo_owner, repo_name, num, github, "defended")
                 break
             else:
                 # Exploit still works on this commit, update score and continue
                 write_score(gen_time, info, scoreboard, unintended_pts)
                 write_message(info, scoreboard, unintended_pts)
                 commit_and_push(scoreboard)
-
-# def process_intended(repo_name, num, config, time, info, scoreboard, id, github):
-#     intended_pts = config['intended_pts']
-#     hash = point_hash(info['attacker'], info['defender'], info['bugkind'])
-#     if is_dup(scoreboard, hash):
-#         failure_action(config['repo_owner'], repo_name, num, \
-#                 '[*] Duplicate bug.', id, github)
-#         return
-#     write_score(time, info, scoreboard, intended_pts)
-#     write_message(info, scoreboard, intended_pts)
-#     if commit_and_push(scoreboard):
-#         mark_as_read(id, github)
 
 def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
     repo_owner = config['repo_owner']
@@ -259,16 +237,15 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
         return
 
     create_label(repo_owner, repo_name, "verified", "9466CB", \
-            "Exploit for %s" % branch , github)
+            "Successfully verified.", github)
     update_label(repo_owner, repo_name, num, github, "verified")
 
-    #XXX: We should fix this logic and scoreboard representation
     kind = commit
     info = {'attacker': attacker, 'defender': defender,
             'branch': branch, 'bugkind': kind}
     sync_scoreboard(scoreboard)
     process_unintended(repo_name, num, config, gen_time, info, scoreboard,
-            id, github)
+            id, github, repo_owner)
 
 def prepare_scoreboard_repo(url):
     path = get_github_path(url).split('/')
