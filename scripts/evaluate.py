@@ -206,17 +206,17 @@ def process_unintended(repo_name, num, config, gen_time, info, scoreboard, id,
                 write_message(info, scoreboard, unintended_pts)
                 commit_and_push(scoreboard)
 
-def process_intended(repo_name, num, config, time, info, scoreboard, id, github):
-    intended_pts = config['intended_pts']
-    hash = point_hash(info['attacker'], info['defender'], info['bugkind'])
-    if is_dup(scoreboard, hash):
-        failure_action(config['repo_owner'], repo_name, num, \
-                '[*] Duplicate bug.', id, github)
-        return
-    write_score(time, info, scoreboard, intended_pts)
-    write_message(info, scoreboard, intended_pts)
-    if commit_and_push(scoreboard):
-        mark_as_read(id, github)
+# def process_intended(repo_name, num, config, time, info, scoreboard, id, github):
+#     intended_pts = config['intended_pts']
+#     hash = point_hash(info['attacker'], info['defender'], info['bugkind'])
+#     if is_dup(scoreboard, hash):
+#         failure_action(config['repo_owner'], repo_name, num, \
+#                 '[*] Duplicate bug.', id, github)
+#         return
+#     write_score(time, info, scoreboard, intended_pts)
+#     write_message(info, scoreboard, intended_pts)
+#     if commit_and_push(scoreboard):
+#         mark_as_read(id, github)
 
 def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
     repo_owner = config['repo_owner']
@@ -256,18 +256,11 @@ def process_issue(repo_name, num, id, config, gen_time, github, scoreboard):
     update_label(repo_owner, repo_name, num, github, "verified")
 
     #XXX: We should fix this logic and scoreboard representation
-    if branch == "master":
-        kind = commit
-    else:
-        kind = branch
+    kind = commit
     info = {'attacker': attacker, 'defender': defender, 'bugkind': kind}
     sync_scoreboard(scoreboard)
-    if kind.startswith('bug'):
-        process_intended(repo_name, num, config, gen_time, info, scoreboard, \
-                id, github)
-    else:
-        process_unintended(repo_name, num, config, gen_time, info, scoreboard,
-                            id, github)
+    process_unintended(repo_name, num, config, gen_time, info, scoreboard,
+            id, github)
 
 def prepare_scoreboard_repo(url):
     path = get_github_path(url).split('/')
