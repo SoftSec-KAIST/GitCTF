@@ -5,6 +5,10 @@ hosted as an in-course activity proposed in our [paper](https://www.usenix.org/s
 repository contains [scripts](scripts) for automating ```Git-based CTF```. To
 see how to configure and play Git-based CTF, see the followings.
 
+**If you want to see the version covered in our
+[paper](https://www.usenix.org/system/files/conference/ase18/ase18-paper_wi.pdf)
+at USENIX ASE, please refer to [ase](../../tree/ase) branch.**
+
 # Setup
 ## Requirement
 
