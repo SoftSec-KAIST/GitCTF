@@ -86,9 +86,6 @@ def submit_issue(title, encrypted_exploit, target_team, config, github):
     repo_owner = config['repo_owner']
     repo_name = config['teams'][target_team]['repo_name']
 
-    # Create issue label first
-    create_bug_labels(repo_owner, repo_name, github)
-
     # Read in encrypted file content
     with open(encrypted_exploit, 'r') as f :
         content = f.read().rstrip()
