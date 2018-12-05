@@ -101,7 +101,7 @@ def point_hash(attacker, defender, bugkind):
     return (attacker + '_' + defender + '_' + bugkind)
 
 def is_dup(scoreboard_dir, h): # XXX slow
-    with open(os.path.join(scoreboard_dir, 'score.csv')) as f:
+    with open(os.path.join(scoreboard_dir, 'score.csv'), 'w+') as f:
         reader = csv.reader(f, delimiter=',')
         for row in reader:
             if len(row) == 0:
